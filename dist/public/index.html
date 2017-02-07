@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>EasyPush</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="/docs.css">
+  </head>
+  <body>
+    <header>
+      <h1 class="title">EasyPush</h1>
+    </header>
+    <main>
+      <h2 class="subtitle">Push notifications to any device!</h2>
+      <p>Make a POST request to send a notification:</p>
+      <code class="example">curl --data 'text=&lt;notification_text&gt;&amp;icon=&lt;icon_url&gt;' https://easypush.erindachtler.me/notify/&lt;channel_id&gt;</code>
+      <p>Or a more literal example:</p>
+      <code class="example">curl --data 'text=Notification Text&amp;icon=https://path.to/icon.png' https://easypush.erindachtler.me/notify/HZOArKxMwZpCXq8O</code>
+      <div class="get-started-holder">
+        <a class="get-started" href="/notifications">Notifications App</a>
+      </div>
+    </main>
+  </body>
+</html>

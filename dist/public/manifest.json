@@ -1,0 +1,9 @@
+{
+  "name": "EasyPush",
+  "short_name": "EasyPush",
+  "start_url": "/notifications",
+  "display": "standalone",
+  "theme_color": "#f92977",
+  "background_color": "#fff6f4",
+  "description": "Push notifications to any device!"
+}

@@ -1,0 +1,48 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+main {
+  margin: 0 auto;
+  width: 700px;
+}
+
+.title {
+  background-color: #FFC107;
+  color: white;
+  margin: 0;
+  padding: 5px;
+  font-size: 28px;
+}
+
+.subtitle {
+  padding: 5px;
+}
+
+.example {
+
+}
+
+code {
+  display: block;
+  background-color: #555;
+  color: white;
+  padding: 5px;
+  border-radius: 3px;
+}
+
+.get-started-holder {
+  text-align: center;
+}
+
+.get-started {
+  display: inline-block;
+  color: white;
+  background-color: #FFC107;
+  border-radius: 6px;
+  padding: 15px;
+  margin-top: 50px;
+  text-decoration: none;
+}
