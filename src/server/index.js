@@ -10,6 +10,7 @@ const {
   destroyChannel,
   getSubscriptionByChannel,
   getUserChannels,
+  getChannelLabel,
   setChannelLabel,
   disableSubscription
 } = require('./store');
