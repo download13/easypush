@@ -8,7 +8,7 @@ services:
     expose:
       - "80"
     volumes:
-      - ~/easylist-volume:/app/store/data
+      - ~/easypush-volume:/app/store/data
 
 networks:
   webserver:
