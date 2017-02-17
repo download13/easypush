@@ -82,6 +82,7 @@ header .docs {
 }
 
 .channel .id {
+  font-family: "Courier New", Courier, monospace;
   color: #aaa;
   margin-right: 10px;
 }

@@ -90,6 +90,8 @@ app.get('/channel/list', usersOnly, (req, res) => {
 app.post('/notify/:channel', urlBody, (req, res) => {
   getChannelLabel(req.params.channel)
     .then(title => {
+      if(!title) return res.status(404).send('Invalid channel');
+
       const {text, icon} = req.body;
       const payload = JSON.stringify({title, text, icon});
 
@@ -97,7 +99,11 @@ app.post('/notify/:channel', urlBody, (req, res) => {
         .then(subscription => {
           if(subscription) {
             webpush.sendNotification(subscription, payload)
-              .then(() => res.send('Notified'));
+              .then(() => res.send('Notified'))
+              .catch(err => {
+                console.error(err.stack);
+                res.status(400).send('Unable to send notification');
+              });
           } else {
             res.status(404).send('Invalid channel');
           }

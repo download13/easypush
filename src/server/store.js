@@ -24,7 +24,7 @@ function createChannel(userId, label) {
 
 function getChannelLabel(channel) {
   return db.get('SELECT label FROM channels WHERE id = ?', channel)
-    .then(r => r.label);
+    .then(r => r && r.label);
 }
 
 function setChannelLabel(userId, channel, label) {
