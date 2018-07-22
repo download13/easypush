@@ -1,15 +1,4 @@
-version: "2"
+version: "3.2"
 services:
   easypush:
-    build: .
-    restart: unless-stopped
-    networks:
-      - webserver
-    expose:
-      - "80"
-    volumes:
-      - ~/easypush-volume:/app/store/data
-
-networks:
-  webserver:
-      external: true
+    restart: on-failure
