@@ -7,4 +7,4 @@ COPY package.json /app/
 RUN npm install --production
 COPY . /app
 
-CMD ["npm", "start"]
+CMD ["NODE_ENV=production node src/server/index.js"]
