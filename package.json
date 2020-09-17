@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "src/server/index.js",
+  "module": true,
   "scripts": {
     "start": "cross-env NODE_ENV=development nodemon src/server/index.js",
     "watch": "webpack -w",
@@ -19,7 +20,8 @@
     "express": "^4.14.1",
     "express-jwt": "^5.1.0",
     "jsonwebtoken": "^7.2.1",
-    "sqlite": "^2.3.0",
+    "sqlite": "4.0.14",
+    "sqlite3": "^5.0.0",
     "urlsafe-base64": "^1.0.0",
     "uuid": "^3.0.1",
     "web-push": "^3.2.1"

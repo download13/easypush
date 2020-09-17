@@ -1,4 +1,5 @@
 const db = require('sqlite');
+const sqlite3 = require('sqlite3');
 const URLSafeBase64 = require('urlsafe-base64');
 const crypto = require('crypto');
 
@@ -91,5 +92,10 @@ exports.getChannelLabel = getChannelLabel;
 exports.setChannelLabel = setChannelLabel;
 exports.getUserChannels = getUserChannels;
 exports.getSubscriptionByChannel = getSubscriptionByChannel;
-exports.dbReady = db.open('./store/data/db.sqlite')
-.then(() => db.migrate({migrationsPath: './store/migrations'}));
+exports.dbReady = db.open({
+  filename: './store/data/db.sqlite',
+  driver: sqlite3.Database
+}).then(db => {
+  db.migrate({ migrationsPath: './store/migrations' })
+  return db
+});
