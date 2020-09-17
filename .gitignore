@@ -1,4 +1,3 @@
-src/client/config.js
 src/server/config.js
 store/data/
 node_modules/
