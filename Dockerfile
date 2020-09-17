@@ -1,4 +1,4 @@
-FROM nubs/npm-gyp-build:fbee23024be8
+FROM node:14.11.0
 RUN mkdir -p /app
 WORKDIR /app
 COPY package.json /app/
