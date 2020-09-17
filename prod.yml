@@ -1,13 +1,12 @@
 version: "3.2"
 services:
   easypush:
-    build: .
     networks:
       - webserver
     ports:
       - "80"
     volumes:
-      - ~/easypush-volume:/app/store/data
+      - ~/volumes/easypush:/app/store/data
 
 networks:
   webserver:
