@@ -7,3 +7,7 @@ services:
       webserver:
         aliases:
           - easypush
+
+networks:
+  webserver:
+    external: true
