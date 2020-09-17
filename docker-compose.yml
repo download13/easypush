@@ -3,3 +3,7 @@ services:
   easypush:
     build: .
     restart: on-failure
+    networks: :
+      webserver:
+        aliases:
+          - easypush
