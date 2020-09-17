@@ -1,4 +1,4 @@
-FROM node:6.9.1-slim
+FROM node:14.11.0-alpine3.10
 # TODO: update node 10.7.0-alpine
 RUN mkdir -p /app
 WORKDIR /app
