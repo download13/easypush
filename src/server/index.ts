@@ -3,7 +3,7 @@ import bodyParser from 'body-parser'
 import expressJWT from 'express-jwt'
 import jwt from 'jsonwebtoken'
 import webpush from 'web-push'
-import uuid from 'uuid/v4'
+import { v4 as uuid } from 'uuid'
 import createStore from './store.js'
 import { usersOnly } from './common.js'
 import {

@@ -1,6 +1,6 @@
-function usersOnly(req, res, next) {
-  if(req.user) next();
-  else res.status(401).send('Unauthorized');
-}
+import type { Request, Response, NextFunction } from 'express'
 
-exports.usersOnly = usersOnly;
+export function usersOnly(req: Request, res: Response, next: NextFunction) {
+  if(req.user) next()
+  else res.status(401).send('Unauthorized')
+}
