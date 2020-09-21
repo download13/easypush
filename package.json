@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "src/server/index.js",
-  "module": true,
+  "esm": true,
   "scripts": {
     "start": "cross-env NODE_ENV=development nodemon src/server/index.js",
     "watch": "webpack -w",
@@ -27,12 +27,16 @@
     "web-push": "^3.2.1"
   },
   "devDependencies": {
+    "@prisma/cli": "^2.7.1",
+    "@typescript-eslint/eslint-plugin": "^4.2.0",
+    "@typescript-eslint/parser": "^4.2.0",
     "babel-core": "^6.22.1",
     "babel-loader": "^6.2.10",
     "babel-plugin-transform-react-jsx": "^6.22.0",
     "babel-preset-es2015": "^6.22.0",
     "babel-preset-es2017": "^6.22.0",
     "cross-env": "^7.0.2",
+    "eslint": "^7.9.0",
     "fast-async": "^6.2.0",
     "nodemon": "^2.0.4",
     "preact": "^7.1.0",
