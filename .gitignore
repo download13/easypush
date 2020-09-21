@@ -1,4 +1,4 @@
 src/server/config.js
-data/
+prisma/data/
 node_modules/
 .vs/
