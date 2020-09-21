@@ -13,7 +13,7 @@ import {
 } from './config.js'
 
 webpush.setVapidDetails(
-  'mailto:download333@gmail.com',
+  'mailto:erin@erindachtler.me',
   vapidPublicKey,
   vapidPrivateKey
 );
