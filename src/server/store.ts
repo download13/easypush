@@ -12,7 +12,7 @@ export default async function createStore() {
   await db.migrate({ migrationsPath: './store/migrations' })
 
   async function saveSubscription(userId: string, subscription: object) {
-    const textSubscription = JSON.stringify(subscription);
+    const textSubscription = JSON.stringify(subscription)
 
     await db.run('DELETE FROM subscriptions WHERE user_id = ?', userId)
     await db.run('INSERT INTO subscriptions VALUES (?, ?, ?)', userId, textSubscription, 1)
@@ -26,21 +26,21 @@ export default async function createStore() {
     return generateChannel()
       .then(channel => {
         return db.run('INSERT INTO channels VALUES (?, ?, ?)', channel, userId, label)
-          .then(() => channel);
-      });
+          .then(() => channel)
+      })
   }
 
   async function getChannelLabel(channel) {
     return db.get('SELECT label FROM channels WHERE id = ?', channel)
-      .then(r => r && r.label);
+      .then(r => r && r.label)
   }
 
   async function setChannelLabel(userId, channel, label) {
-    return db.run('UPDATE channels SET label = ? WHERE id = ? AND user_id = ?', label, channel, userId);
+    return db.run('UPDATE channels SET label = ? WHERE id = ? AND user_id = ?', label, channel, userId)
   }
 
   async function destroyChannel(userId, channel) {
-    return db.run('DELETE FROM channels WHERE id = ? AND user_id = ?', channel, userId);
+    return db.run('DELETE FROM channels WHERE id = ? AND user_id = ?', channel, userId)
   }
 
   async function getSubscriptionByChannel(channel) {
@@ -48,19 +48,19 @@ export default async function createStore() {
       .then(userId => db.get('SELECT subscription, enabled FROM subscriptions WHERE user_id = ?', userId))
       .then(r => {
         if(r && r.enabled) {
-          return JSON.parse(r.subscription);
+          return JSON.parse(r.subscription)
         }
-        return null;
-      });
+        return null
+      })
   }
 
   async function getUserByChannel(channel) {
     return db.get('SELECT user_id FROM channels WHERE id = ?', channel)
-      .then(r => r.user_id);
+      .then(r => r.user_id)
   }
 
   async function getUserChannels(userId) {
-    return db.all('SELECT id, label FROM channels WHERE user_id = ?', userId);
+    return db.all('SELECT id, label FROM channels WHERE user_id = ?', userId)
   }
 
   async function validateSubscription(obj) {
@@ -69,7 +69,7 @@ export default async function createStore() {
       typeof obj.keys !== 'object' ||
       typeof obj.keys.auth !== 'string' ||
       typeof obj.keys.p256dh !== 'string'
-    ) return null;
+    ) return null
 
     return {
       endpoint: obj.endpoint,
@@ -77,16 +77,16 @@ export default async function createStore() {
         auth: obj.keys.auth,
         p256dh: obj.keys.p256dh
       }
-    };
+    }
   }
 
   async function generateChannel() {
     return new Promise((resolve, reject) => {
       crypto.randomBytes(12, (err, bytes) => {
-        if(err) reject(err);
-        else resolve(URLSafeBase64.encode(bytes));
-      });
-    });
+        if(err) reject(err)
+        else resolve(URLSafeBase64.encode(bytes))
+      })
+    })
   }
 
   return {
