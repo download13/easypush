@@ -39,6 +39,7 @@ header .docs {
 }
 
 .toggle-notifications {
+  cursor: pointer;
   font-weight: bold;
   font-size: 16px;
   padding: 0 10px;
