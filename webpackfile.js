@@ -1,6 +1,7 @@
 const path = require('path')
 
 const publicOut = path.resolve('./dist/public')
+const clientDir = path.resolve('./src/client')
 
 const tsRule = {
   test: /\.tsx?$/,
@@ -27,7 +28,7 @@ const babelRule = {
 
 module.exports = [
   {
-    entry: './src/client/index.tsx',
+    entry: path.join(clientDir, 'index.tsx'),
     output: {
       path: publicOut,
       filename: 'client.js'
@@ -40,7 +41,7 @@ module.exports = [
     }
   },
   { // Service worker
-    entry: './src/client/sw.js',
+    entry: path.join(clientDir, 'sw.js'),
     output: {
       path: publicOut,
       filename: 'sw.js'

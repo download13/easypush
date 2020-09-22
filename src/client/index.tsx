@@ -1,12 +1,11 @@
 import { h, render } from 'preact'
-import Notifications from './components/Notifications'
-
+import NotificationsPage from './pages/NotificationsPage'
 
 if(navigator.serviceWorker) {
 	navigator.serviceWorker.register('/sw.js')
 }
 
 render(
-	<Notifications />,
+	<NotificationsPage />,
 	document.getElementById('appmount') as HTMLElement
 )
