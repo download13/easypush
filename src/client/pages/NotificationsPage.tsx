@@ -7,10 +7,10 @@ import {
 	createChannel,
 	enableNotifications,
 	disableNotifications
-} from '../api.js'
-import Channel from '../components/Channel.js'
+} from '../api'
+import Channel from '../components/Channel'
 
-export default function NotificationsPage(): VNode {
+export function NotificationsPage(): VNode {
 	const [ response, setResponse ] = useState<NotificationResponse>(disabledNotificationResponse)
 
 	function refresh() {

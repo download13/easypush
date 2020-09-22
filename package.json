@@ -8,6 +8,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=development nodemon src/server/index.js",
     "watch": "webpack -w --mode=development",
+    "serve": "serve dist/public",
     "build": "webpack -p && eval $(minikube docker-env) && docker build -t build:easypush .",
     "stage": "another TODO:",
     "deploy:": "npm run build #what next",
@@ -47,6 +48,7 @@
     "eslint": "^7.9.0",
     "nodemon": "^2.0.4",
     "preact": "10.4.8",
+    "serve": "^11.3.2",
     "swkit": "^0.3.0",
     "ts-loader": "^8.0.4",
     "typescript": "^4.0.3",

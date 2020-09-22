@@ -38,6 +38,9 @@ module.exports = [
         tsRule,
         babelRule
       ]
+    },
+    resolve: {
+      extensions: ['.js', '.ts', '.tsx'],
     }
   },
   { // Service worker
