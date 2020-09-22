@@ -3,6 +3,35 @@ import { v4 as uuid } from 'uuid'
 const vapidPublicKey = 'BAzsxRLgClQfk1yeiQFhMakVmbZ8LzQtwypN6HaEUB_ZPf0Z7UTZFkx-0zef8H_DYlyi-wgG_ewtKr9VBHNrISc'
 const applicationServerKey = urlBase64ToUint8Array(vapidPublicKey)
 
+type Channel = {
+	id: string
+	label: string
+}
+
+export type NotificationResponse = {
+	enabled: boolean
+	channels: Channel[]
+}
+export const disabledNotificationResponse = {
+	enabled: false,
+	channels: []
+}
+
+export async function getNotificationState(): Promise<NotificationResponse> {
+	const res = await authedFetch('/channel/list')
+
+	if(res.ok) {
+		return {
+			enabled: true,
+			channels: await res.json()
+		}
+	} else if(res.status !== 401) {
+		console.error('createChannel error', res.status, await res.text())
+	}
+
+	return disabledNotificationResponse
+}
+
 async function createChannel(label: string) {
 	const res = await authedFetch('/channel/create', {
 		method: 'POST',
@@ -18,7 +47,7 @@ async function createChannel(label: string) {
 	}
 }
 
-async function setChannelLabel(channel: string, label: string) {
+export async function setChannelLabel(channel: string, label: string): Promise<boolean> {
 	const res = await authedFetch(`/channel/${channel}/label`, {
 		method: 'POST',
 		headers: {'Content-Type': 'text/plain'},
@@ -26,14 +55,14 @@ async function setChannelLabel(channel: string, label: string) {
 	})
 
 	if(res.ok) {
-		return res.text()
+		return true
 	} else {
 		console.error('setChannelLabel error', res.status, await res.text())
-		return null
+		return false
 	}
 }
 
-async function destroyChannel(channel: string) {
+export async function destroyChannel(channel: string): Promise<boolean> {
 	const res = await authedFetch('/channel/destroy', {
 		method: 'POST',
 		headers: {'Content-Type': 'text/plain'},
@@ -41,24 +70,10 @@ async function destroyChannel(channel: string) {
 	})
 
 	if(res.ok) {
-		return res.text()
+		return true
 	} else {
 		console.error('destroyChannel error', res.status, await res.text())
-		return null
-	}
-}
-
-async function getChannels() {
-	const res = await authedFetch('/channel/list')
-
-	if(res.ok) {
-		return res.json()
-	} else if(res.status === 401) {
-		console.log('getChannels: No channels. Not logged in.')
-		return []
-	} else {
-		console.error('createChannel error', res.status, await res.text())
-		return []
+		return false
 	}
 }
 
