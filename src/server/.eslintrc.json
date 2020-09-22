@@ -18,6 +18,14 @@
     "rules": {
         "semi": ["warn", "never"],
         "@typescript-eslint/explicit-module-boundary-types": "off",
-        "indent": ["warn", "tab"]
+        "indent": ["error", "tab"],
+        "quotes": [
+            "error",
+            "single"
+        ],
+        "linebreak-style": [
+            "error",
+            "unix"
+        ]
     }
 }

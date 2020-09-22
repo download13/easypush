@@ -1,14 +1,14 @@
-const { h, useState, useEffect } = require('preact')
-const {
+import { h, Component, useState, useEffect } from 'preact'
+import {
 	createChannel,
 	getChannels,
 	setChannelLabel,
 	destroyChannel,
 	enableNotifications,
 	disableNotifications
-} = require('../api')
+} from '../api'
 
-function Notification() {
+export default function Notification() {
 	const [ channels, setChannels ] = useState([])
 
 	useEffect(() => {
@@ -32,18 +32,20 @@ function Notification() {
 		enableMessage = <div class="enable-message">Enable notifications to create channels</div>
 	}
 
-	return <div class="notifications">
-		<header>
-			<h1>EasyPush</h1>
-			<a class="docs" href="/">Docs</a>
-			<button class="toggle-notifications" onClick={subscribeAction}>{subscribeText}</button>
-		</header>
-		<div>
-			{enableMessage}
-			{channels.map(channel => <Channel key={channel.id} onChanged={this.refreshChannels} {...channel}/>)}
+	return (
+		<div class="notifications">
+			<header>
+				<h1>EasyPush</h1>
+				<a class="docs" href="/">Docs</a>
+				<button class="toggle-notifications" onClick={subscribeAction}>{subscribeText}</button>
+			</header>
+			<div>
+				{enableMessage}
+				{channels.map(channel => <Channel key={channel.id} onChanged={this.refreshChannels} {...channel}/>)}
+			</div>
+			{createButton}
 		</div>
-		{createButton}
-	</div>
+	)
 
 /*
   async enableNotifications() {

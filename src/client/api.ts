@@ -1,8 +1,9 @@
-import { vapidPublicKey } from './config'
+import { v4 as uuid } from 'uuid'
 
+const vapidPublicKey = 'BAzsxRLgClQfk1yeiQFhMakVmbZ8LzQtwypN6HaEUB_ZPf0Z7UTZFkx-0zef8H_DYlyi-wgG_ewtKr9VBHNrISc'
 const applicationServerKey = urlBase64ToUint8Array(vapidPublicKey)
 
-async function createChannel(label) {
+async function createChannel(label: string) {
 	const res = await authedFetch('/channel/create', {
 		method: 'POST',
 		headers: {'Content-Type': 'text/plain'},
@@ -17,7 +18,7 @@ async function createChannel(label) {
 	}
 }
 
-async function setChannelLabel(channel, label) {
+async function setChannelLabel(channel: string, label: string) {
 	const res = await authedFetch(`/channel/${channel}/label`, {
 		method: 'POST',
 		headers: {'Content-Type': 'text/plain'},
@@ -32,7 +33,7 @@ async function setChannelLabel(channel, label) {
 	}
 }
 
-async function destroyChannel(channel) {
+async function destroyChannel(channel: string) {
 	const res = await authedFetch('/channel/destroy', {
 		method: 'POST',
 		headers: {'Content-Type': 'text/plain'},
@@ -66,6 +67,10 @@ async function enableNotifications() {
 	if(status !== 'granted') return false
 
 	const registration = await navigator.serviceWorker.getRegistration()
+	if(!registration) {
+		console.error('Unable to enable notifications. No serviceworker registration')
+		return
+	}
 
 	const subscription = await registration.pushManager.subscribe({
 		userVisibleOnly: true,
@@ -101,15 +106,17 @@ async function disableNotifications() {
 	}
 }
 
-function authedFetch(url, options = {}) {
+function authedFetch(url: string, options: RequestInit = {}) {
 	let key = localStorage.getItem('easypushKey')
 	if(!key) {
 		key = uuid()
 		localStorage.setItem('easypushKey', key)
 	}
 
-	if(!options.headers) options.headers = {}
-	options.headers.Authorization = key
+	options.headers = {
+		...options.headers,
+		Authorization: key
+	}
 
 	return fetch(url, options)
 }
@@ -121,9 +128,8 @@ exports.createChannel = createChannel
 exports.destroyChannel = destroyChannel
 exports.getChannels = getChannels
 exports.setChannelLabel = setChannelLabel
-exports.testNotifyChannel = () => {
-	const channel = document.getElementById('channel')
-	fetch('/notify/' + channel.value, {
+exports.testNotifyChannel = (channel: string) => {
+	fetch('/notify/' + channel, {
 		method: 'POST',
 		body: 'title=testtitle&text=testtext',
 		headers: {'Content-Type': 'application/x-www-form-urlencoded'}
@@ -133,10 +139,10 @@ exports.testNotifyChannel = () => {
 }
 
 
-function urlBase64ToUint8Array(base64String) {
+function urlBase64ToUint8Array(base64String: string): Uint8Array {
 	const padding = '='.repeat((4 - base64String.length % 4) % 4)
 	const base64 = (base64String + padding)
-		.replace(/\-/g, '+')
+		.replace(/-/g, '+')
 		.replace(/_/g, '/')
 
 	const rawData = window.atob(base64)

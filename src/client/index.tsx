@@ -8,5 +8,5 @@ if(navigator.serviceWorker) {
 
 render(
 	<Notifications/>,
-	document.getElementById('appmount')
+	document.getElementById('appmount') as HTMLElement
 )
