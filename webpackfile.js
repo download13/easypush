@@ -16,15 +16,9 @@ module.exports = [
           exclude: /node_modules/,
           loader: 'babel-loader',
           query: {
-            presets: ['env'],
+            presets: ['env', 'typescript'],
             plugins: [
-              ['babel-plugin-transform-react-jsx', {pragma:'h'}],
-              ['fast-async', {
-                env: {
-                  'dontMapStackTraces': true,
-                  'dontInstallRequireHook': true
-                }
-              }]
+              ['babel-plugin-transform-react-jsx', {pragma:'h'}]
             ]
           }
         }
