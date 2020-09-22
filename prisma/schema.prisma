@@ -11,11 +11,14 @@ model BrowserHandle {
   id            Int            @id @default(autoincrement())
   subscription  String
   enabled       Boolean        @default(true)
+
+  channels      Channel[]
 }
 
 model Channel {
-  id            Int            @id @default(autoincrement())
+  id            String         @id @default(cuid())
+  label         String
+
   handleId      Int
   handle        BrowserHandle  @relation(fields: [handleId], references: [id])
-  label         String
 }

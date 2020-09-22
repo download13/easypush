@@ -1,5 +1,5 @@
 import { h, render } from 'preact'
-import Notifications from './components/notifications'
+import Notifications from './components/Notifications'
 
 
 if(navigator.serviceWorker) {
@@ -7,6 +7,6 @@ if(navigator.serviceWorker) {
 }
 
 render(
-	<Notifications/>,
+	<Notifications />,
 	document.getElementById('appmount') as HTMLElement
 )

@@ -40,14 +40,13 @@ module.exports = [
     }
   },
   { // Service worker
-    entry: './src/client/sw.ts',
+    entry: './src/client/sw.js',
     output: {
       path: publicOut,
       filename: 'sw.js'
     },
     module: {
       rules: [
-        tsRule,
         babelRule
       ]
     }

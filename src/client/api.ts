@@ -32,7 +32,7 @@ export async function getNotificationState(): Promise<NotificationResponse> {
 	return disabledNotificationResponse
 }
 
-async function createChannel(label: string) {
+export async function createChannel(label: string): Promise<boolean> {
 	const res = await authedFetch('/channel/create', {
 		method: 'POST',
 		headers: {'Content-Type': 'text/plain'},
@@ -40,10 +40,10 @@ async function createChannel(label: string) {
 	})
 
 	if(res.ok) {
-		return res.text()
+		return true
 	} else {
 		console.error('createChannel error', res.status, await res.text())
-		return null
+		return false
 	}
 }
 
@@ -77,14 +77,14 @@ export async function destroyChannel(channel: string): Promise<boolean> {
 	}
 }
 
-async function enableNotifications() {
+export async function enableNotifications(): Promise<boolean> {
 	const status = await Notification.requestPermission()
 	if(status !== 'granted') return false
 
 	const registration = await navigator.serviceWorker.getRegistration()
 	if(!registration) {
 		console.error('Unable to enable notifications. No serviceworker registration')
-		return
+		return false
 	}
 
 	const subscription = await registration.pushManager.subscribe({
@@ -108,7 +108,7 @@ async function enableNotifications() {
 	}
 }
 
-async function disableNotifications() {
+export async function disableNotifications(): Promise<boolean> {
 	const res = await authedFetch('/disable', {method: 'POST'})
 
 	const text = await res.text()
@@ -137,22 +137,14 @@ function authedFetch(url: string, options: RequestInit = {}) {
 }
 
 
-exports.enableNotifications = enableNotifications
-exports.disableNotifications = disableNotifications
-exports.createChannel = createChannel
-exports.destroyChannel = destroyChannel
-exports.getChannels = getChannels
-exports.setChannelLabel = setChannelLabel
-exports.testNotifyChannel = (channel: string) => {
-	fetch('/notify/' + channel, {
+export async function testNotifyChannel(channel: string): Promise<void> {
+	const res = await fetch('/notify/' + channel, {
 		method: 'POST',
 		body: 'title=testtitle&text=testtext',
 		headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 	})
-		.then(res => res.text())
-		.then(t => console.log(t))
+	console.log(await res.text())
 }
-
 
 function urlBase64ToUint8Array(base64String: string): Uint8Array {
 	const padding = '='.repeat((4 - base64String.length % 4) % 4)

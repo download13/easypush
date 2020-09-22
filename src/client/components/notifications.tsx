@@ -1,4 +1,4 @@
-import { h, Component } from 'preact'
+import { h, VNode } from 'preact'
 import { useState, useEffect } from 'preact/hooks'
 import {
 	NotificationResponse,
@@ -8,8 +8,9 @@ import {
 	enableNotifications,
 	disableNotifications
 } from '../api'
+import Channel from './Channel'
 
-export default function Notification() {
+export default function Notifications(): VNode {
 	const [ response, setResponse ] = useState<NotificationResponse>(disabledNotificationResponse)
 
 	function refresh() {
@@ -19,18 +20,6 @@ export default function Notification() {
 	useEffect(refresh, [])
 
 	const { enabled, channels } = response
-
-	let createButton, enableMessage
-	if(notificationsEnabled) {
-
-
-		if(channels.length === 0) {
-			enableMessage = <div class="enable-message">Create a channel to get started</div>
-		}
-	} else {
-
-		enableMessage = <div class="enable-message">Enable notifications to create channels</div>
-	}
 
 	return (
 		<div class="notifications">
@@ -51,11 +40,21 @@ export default function Notification() {
 				</button>
 			</header>
 			<div>
-				{enableMessage}
+				<div class="enable-message">
+					{enabled
+						? (channels.length === 0
+							? 'Create a channel to get started'
+							: null
+						)
+						: 'Enable notifications to create channels'
+					}
+				</div>
 				{channels.map(channel =>
 					<Channel
 						key={channel.id}
-						onChanged={refresh} {...channel}
+						id={channel.id}
+						label={channel.label}
+						onChanged={refresh}
 					/>
 				)}
 			</div>
@@ -63,10 +62,10 @@ export default function Notification() {
 				<button
 					class="create-channel"
 					title="Create Channel"
-					onClick={() => {
-						const label = prompt('Label this channel?');
+					onClick={async () => {
+						const label = prompt('Label this channel?')
 						if(label !== null) {
-							await createChannel(label);
+							await createChannel(label)
 							refresh()
 						}
 					}}
@@ -74,3 +73,4 @@ export default function Notification() {
 			}
 		</div>
 	)
+}
