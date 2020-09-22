@@ -17,11 +17,11 @@ export function isSubscription(obj: unknown): obj is Subscription {
 	const s = obj as Subscription
 	return (
 		obj &&
-    typeof obj === 'object' &&
-    typeof s.endpoint === 'string' &&
-    typeof s.keys === 'object' &&
-    typeof s.keys.auth === 'string' &&
-    typeof s.keys.p256dh === 'string'
+		typeof obj === 'object' &&
+		typeof s.endpoint === 'string' &&
+		typeof s.keys === 'object' &&
+		typeof s.keys.auth === 'string' &&
+		typeof s.keys.p256dh === 'string'
 	)
 }
 
