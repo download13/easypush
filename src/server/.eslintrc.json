@@ -16,6 +16,7 @@
         "@typescript-eslint"
     ],
     "rules": {
-        "semi": ["warn", "never"]
+        "semi": ["warn", "never"],
+        "@typescript-eslint/explicit-module-boundary-types": "off"
     }
 }
