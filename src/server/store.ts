@@ -1,20 +1,23 @@
-import sqlite from 'sqlite'
-import sqlite3 from 'sqlite3'
+import { PrismaClient } from '@prisma/client'
 import URLSafeBase64 from 'urlsafe-base64'
 import crypto from 'crypto'
 
+type ThenArg<T> = T extends PromiseLike<infer U> ? U : T
+
+export type Store = ThenArg<ReturnType<typeof createStore>>
+
 export default async function createStore() {
-  const db = await sqlite.open({
-    filename: './store/data/db.sqlite',
-    driver: sqlite3.Database
-  })
+  const prisma = new PrismaClient()
 
-  await db.migrate({ migrationsPath: './store/migrations' })
-
-  async function saveSubscription(userId: string, subscription: object) {
+  async function saveSubscription(key: string, subscription: any) {
     const textSubscription = JSON.stringify(subscription)
 
-    await db.run('DELETE FROM subscriptions WHERE user_id = ?', userId)
+    prisma.browserHandle.upsert({
+      where: { sub },
+      create: { subscription }
+    })
+
+    await prisma.run('DELETE FROM subscriptions WHERE user_id = ?', userId)
     await db.run('INSERT INTO subscriptions VALUES (?, ?, ?)', userId, textSubscription, 1)
   }
 
@@ -63,23 +66,6 @@ export default async function createStore() {
     return db.all('SELECT id, label FROM channels WHERE user_id = ?', userId)
   }
 
-  async function validateSubscription(obj) {
-    if(
-      typeof obj.endpoint !== 'string' ||
-      typeof obj.keys !== 'object' ||
-      typeof obj.keys.auth !== 'string' ||
-      typeof obj.keys.p256dh !== 'string'
-    ) return null
-
-    return {
-      endpoint: obj.endpoint,
-      keys: {
-        auth: obj.keys.auth,
-        p256dh: obj.keys.p256dh
-      }
-    }
-  }
-
   async function generateChannel() {
     return new Promise((resolve, reject) => {
       crypto.randomBytes(12, (err, bytes) => {
@@ -92,7 +78,6 @@ export default async function createStore() {
   return {
     saveSubscription,
     disableSubscription,
-    validateSubscription,
     createChannel,
     destroyChannel,
     getChannelLabel,

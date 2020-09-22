@@ -28,7 +28,7 @@ async function main() {
     algorithms: ['HS256']
   }))
 
-  addRoutes(app)
+  addRoutes(app, store)
 
   app.listen(80, () => console.log('Listening on 80'))
 }

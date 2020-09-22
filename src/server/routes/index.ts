@@ -1,17 +1,18 @@
+import type { Store } from '../store.js'
 import type { Express } from 'express'
 import bodyParser from 'body-parser'
 import jwt from 'jsonwebtoken'
-import { isSubscription, usersOnly } from '../common.js'
+import webpush from 'web-push'
+import { isSubscription, usersOnly } from './common.js'
 import { jwtSecret } from '../config.js'
 
 const jsonBody = bodyParser.json()
 const textBody = bodyParser.text()
 const urlBody = bodyParser.urlencoded({extended: false})
 
-export default function addRoutes(app: Express) {
+export default function addRoutes(app: Express, store: Store) {
 	app.post('/enable', jsonBody, async (req, res) => {
-
-    const token = jwt.sign({ id: req.user.data }, jwtSecret)
+		const { key } = req.query
     const subscription = req.body
 
     if(isSubscription(subscription)) {
