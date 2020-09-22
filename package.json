@@ -16,6 +16,7 @@
   "author": "Erin Dachtler <download333@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "^2.7.1",
     "@types/urlsafe-base64": "^1.0.28",
     "body-parser": "1.19.0",
     "express": "4.17.1",
