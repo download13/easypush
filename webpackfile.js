@@ -1,8 +1,12 @@
+const path = require('path')
+
+const publicOut = path.resolve('./dist/public')
+
 module.exports = [
   {
     entry: './src/client/index.js',
     output: {
-      path: './dist/public',
+      path: publicOut,
       filename: 'client.js'
     },
     module: {
@@ -12,9 +16,7 @@ module.exports = [
           exclude: /node_modules/,
           loader: 'babel-loader',
           query: {
-            presets: [
-              'babel-preset-es2015'
-            ],
+            presets: ['env'],
             plugins: [
               ['babel-plugin-transform-react-jsx', {pragma:'h'}],
               ['fast-async', {
@@ -32,7 +34,7 @@ module.exports = [
   { // Service worker
     entry: './src/client/sw.js',
     output: {
-      path: './dist/public',
+      path: publicOut,
       filename: 'sw.js'
     },
     module: {
@@ -42,7 +44,7 @@ module.exports = [
           exclude: /node_modules/,
           loader: 'babel-loader',
           query: {
-            presets: ['babel-preset-es2015']
+            presets: ['env']
           }
         }
       ]
