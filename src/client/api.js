@@ -107,14 +107,15 @@ async function disableNotifications() {
   }
 }
 
-function authedFetch(url, options) {
-  const token = localStorage.getItem('easypushAuthToken');
-
-  if(token) {
-    if(!options) options = {};
-    if(!options.headers) options.headers = {};
-    options.headers.Authorization = 'Bearer ' + token;
+function authedFetch(url, options = {}) {
+  let key = localStorage.getItem('easypushKey')
+  if(!key) {
+    key = uuid()
+    localStorage.setItem('easypushKey', key);
   }
+
+  if(!options.headers) options.headers = {};
+  options.headers.Authorization = key;
 
   return fetch(url, options);
 }
