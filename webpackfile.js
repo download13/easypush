@@ -10,16 +10,23 @@ module.exports = [
       filename: 'client.js'
     },
     module: {
-      loaders: [
+      rules: [
         {
           test: /\.js$/,
           exclude: /node_modules/,
-          loader: 'babel-loader',
-          query: {
-            presets: ['env', 'typescript'],
-            plugins: [
-              ['babel-plugin-transform-react-jsx', {pragma:'h'}]
-            ]
+          use: {
+            loader: 'babel-loader',
+            options: {
+              presets: [
+                ['@babel/preset-env', {
+                  'targets': '> 2%, not dead'
+                }],
+                '@babel/preset-typescript'
+              ],
+              plugins: [
+                ['@babel/plugin-transform-react-jsx', { 'pragma': 'h' }]
+              ]
+            }
           }
         }
       ]
@@ -32,13 +39,19 @@ module.exports = [
       filename: 'sw.js'
     },
     module: {
-      loaders: [
+      rules: [
         {
           test: /\.js$/,
           exclude: /node_modules/,
-          loader: 'babel-loader',
-          query: {
-            presets: ['env']
+          use: {
+            loader: 'babel-loader',
+            options: {
+              presets: [
+                ['@babel/preset-env', {
+                  'targets': '> 2%, not dead'
+                }]
+              ]
+            }
           }
         }
       ]

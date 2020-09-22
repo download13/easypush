@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.11.6",
+    "@babel/plugin-transform-react-jsx": "^7.10.4",
     "@babel/preset-env": "^7.11.5",
     "@babel/preset-typescript": "^7.10.4",
     "@prisma/cli": "^2.7.1",
@@ -42,7 +43,6 @@
     "@typescript-eslint/eslint-plugin": "^4.2.0",
     "@typescript-eslint/parser": "^4.2.0",
     "babel-loader": "^8.1.0",
-    "babel-plugin-transform-react-jsx": "^6.22.0",
     "cross-env": "^7.0.2",
     "eslint": "^7.9.0",
     "nodemon": "^2.0.4",

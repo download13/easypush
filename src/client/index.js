@@ -1,13 +1,12 @@
-const {h, render} = require('preact');
-const uuid = require('uuid').v4
-const Notifications = require('./components/notifications');
+import { h, render } from 'preact'
+import Notifications from './components/notifications'
 
 
 if(navigator.serviceWorker) {
-  navigator.serviceWorker.register('/sw.js');
+	navigator.serviceWorker.register('/sw.js')
 }
 
 render(
-  <Notifications/>,
-  document.getElementById('appmount')
-);
+	<Notifications/>,
+	document.getElementById('appmount')
+)
