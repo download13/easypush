@@ -10,6 +10,12 @@ VAPID_PRIVATE_KEY="generate keys with"
 VAPID_PUBLIC_KEY="npx web-push generate-vapid-keys"
 ```
 
+Compile schema with `npx prisma generate`
+
+Create database file with `npx prisma --experimental migrate up`
+
+Customize the volume path in `docker-compose.yml`
+
 Development
 -----------
 `npm run watch:server`
