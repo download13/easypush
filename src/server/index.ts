@@ -2,20 +2,21 @@ import express from 'express'
 import expressJWT from 'express-jwt'
 import webpush from 'web-push'
 import createStore from './store.js'
-import {
-	vapidPublicKey,
-	vapidPrivateKey,
-	jwtSecret
-} from './config.js'
 import addRoutes from './routes/index.js'
 
+import 'dotenv/config.js'
+const { JWT_SECRET, VAPID_CONTACT, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY} = process.env
+if(!JWT_SECRET || !VAPID_CONTACT || !VAPID_PUBLIC_KEY || !VAPID_PRIVATE_KEY) {
+	throw 'Make a .env file! See README.md for details'
+}
+
 webpush.setVapidDetails(
-	'mailto:erin@erindachtler.me',
-	vapidPublicKey,
-	vapidPrivateKey
+	VAPID_CONTACT,
+	VAPID_PUBLIC_KEY,
+	VAPID_PRIVATE_KEY
 )
 
-async function main() {
+async function main(jwtSecret: string) {
 	const app = express()
 
 	const store = await createStore()
@@ -33,4 +34,4 @@ async function main() {
 	app.listen(80, () => console.log('Listening on 80'))
 }
 
-main()
+main(JWT_SECRET)

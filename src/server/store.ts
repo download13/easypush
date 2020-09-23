@@ -9,6 +9,7 @@ export type Store = ThenArg<ReturnType<typeof createStore>>
 export default async function createStore() {
 	const prisma = new PrismaClient()
 
+	/*
 	async function saveSubscription(key: string, subscription: any) {
 		const textSubscription = JSON.stringify(subscription)
 
@@ -57,12 +58,12 @@ export default async function createStore() {
 			})
 	}
 
-	async function getUserByChannel(channel) {
+	async function getUserByChannel(channel: string) {
 		return db.get('SELECT user_id FROM channels WHERE id = ?', channel)
 			.then(r => r.user_id)
 	}
 
-	async function getUserChannels(userId) {
+	async function getUserChannels(userId: string) {
 		return db.all('SELECT id, label FROM channels WHERE user_id = ?', userId)
 	}
 
@@ -84,5 +85,6 @@ export default async function createStore() {
 		setChannelLabel,
 		getUserChannels,
 		getSubscriptionByChannel
-	}
+	}*/
+	
 }

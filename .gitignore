@@ -1,4 +1,5 @@
-src/server/config.js
+.env
+dist
 prisma/data
 node_modules
 .vs
