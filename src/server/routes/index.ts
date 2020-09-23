@@ -1,52 +1,76 @@
 import type { Store } from '../store.js'
 import type { Express } from 'express'
 import bodyParser from 'body-parser'
-import jwt from 'jsonwebtoken'
 import webpush from 'web-push'
-import { isSubscription, usersOnly, getKey } from './common.js'
-import { jwtSecret } from '../config.js'
+import { isSubscription, getKey, getChannelId, keyRequired } from './common.js'
 
 const jsonBody = bodyParser.json()
 const textBody = bodyParser.text()
 const urlBody = bodyParser.urlencoded({extended: false})
 
 export default function addRoutes(app: Express, store: Store) {
-	app.post('/enable', jsonBody, async (req, res) => {
-		const key = getKey(req)
-		const subscription = req.body
+	app.post('/enable', jsonBody, keyRequired, async (req, res) => {
+		const key = req['authKey'] as string
 
-		if(isSubscription(subscription)) {
-			await store.saveSubscription(key, subscription)
-			res.send('Saved')
-		} else {
+		const subscription = req.body
+		if(!isSubscription(subscription)) {
 			res.status(400).send('Invalid subscription')
+			return
 		}
+
+		await store.addSubscription(key, subscription)
+		res.send('Enabled')
 	})
 
-	app.post('/disable', async (req, res) => {
-		const key = getKey(req)
-		if(!key) {
-			res.status(400).send('Invalid key')
-		}
+	app.post('/disable', keyRequired, async (req, res) => {
+		const key = req['authKey'] as string
 
-		await store.disableSubscription(req.user.data)
+		await store.removeSubscription(key)
 		res.send('Disabled')
 	})
 
-	app.post('/channel/create', textBody, (req, res) => {
-		const channel = await store.createChannel(req.user.data, req.body)
-		res.send(channel)
+	app.post('/channel/create', textBody, keyRequired, async (req, res) => {
+		const key = req['authKey'] as string
+
+		const label = req.body
+		if(!label || typeof label !== 'string') {
+			res.status(400).send('Invalid label')
+			return
+		}
+
+		const channelId = await store.addChannel(key, label)
+		res.send(channelId)
 	})
 
-	app.post('/channel/:channel/label', textBody, async (req, res) => {
-		const label = req.body
+	app.post('/channel/:channel/label', textBody, keyRequired, async (req, res) => {
+		const key = req['authKey'] as string
 
-		await store.setChannelLabel(req.user.data, req.params.channel, label)
+		const channelId = getChannelId(req.params.channel)
+		if(!channelId) {
+			res.status(400).send('Invalid channel')
+			return
+		}
+
+		const label = req.body
+		if(!label || typeof label !== 'string') {
+			res.status(400).send('Invalid label')
+			return
+		}
+
+		await store.setChannelLabel(key, channelId, label)
 		res.send(label)
 	})
 
-	app.post('/channel/destroy', textBody, async (req, res) => {
-		await store.destroyChannel(req.user.data, req.body)
+	app.post('/channel/destroy', textBody, keyRequired, async (req, res) => {
+		const key = req['authKey'] as string
+
+		const channelId = getChannelId(req.params.channel)
+		if(!channelId) {
+			res.status(400).send('Invalid channel')
+			return
+		}
+
+		await store.removeChannel(key, id, req.body)
 		res.send('Destroyed')
 	})
 
@@ -56,7 +80,7 @@ export default function addRoutes(app: Express, store: Store) {
 	})
 
 	app.post('/notify/:channel', urlBody, async (req, res) => {
-		const title = await store.getChannelLabel(req.params.channel)
+		const title = await store.getChannelLabel(req.body)
 
 		if(!title) {
 			res.status(404).send('Invalid channel')

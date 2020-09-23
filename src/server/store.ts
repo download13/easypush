@@ -9,44 +9,63 @@ export type Store = ThenArg<ReturnType<typeof createStore>>
 export default async function createStore() {
 	const prisma = new PrismaClient()
 
-	/*
-	async function saveSubscription(key: string, subscription: any) {
-		const textSubscription = JSON.stringify(subscription)
+	async function addSubscription(key: string, subscription: PushSubscriptionJSON) {
+		const subscriptionString = JSON.stringify(subscription)
 
-		prisma.browserHandle.upsert({
-			where: { sub },
-			create: { subscription }
+		await prisma.browserHandle.upsert({
+			where: { id: key },
+			update: { subscription: subscriptionString },
+			create: { id: key, subscription: subscriptionString }
+		})
+	}
+
+	async function removeSubscription(key: string) {
+		await prisma.browserHandle.update({
+			where: { id: key },
+			data: { subscription: '' }
+		})
+	}
+
+	async function addChannel(subscriptionKey: string, label: string) {
+		const id = await generateChannel()
+
+		await prisma.channel.create({ data: {
+			id,
+			handle: { connect: { id: subscriptionKey } },
+			label
+		}})
+
+		return id
+	}
+
+	async function setChannelLabel(subscriptionKey: string, id: string, label: string) {
+		const channel = await prisma.channel.findOne({
+			where: { id }
 		})
 
-		await prisma.run('DELETE FROM subscriptions WHERE user_id = ?', userId)
-		await db.run('INSERT INTO subscriptions VALUES (?, ?, ?)', userId, textSubscription, 1)
+		if(!channel || channel.handleId !== subscriptionKey) return false
+
+		await prisma.channel.update({
+			where: { id },
+			data: { label }
+		})
+		return true
 	}
 
-	async function disableSubscription(userId: string) {
-		return db.run('UPDATE subscriptions SET enabled = ? WHERE user_id = ?', 0, userId)
+	async function removeChannel(subscriptionKey: string, id: string) {
+		const channel = await prisma.channel.findOne({
+			where: { id }
+		})
+
+		channel.handle()
+
+		if(!channel || channel.handleId !== subscriptionKey) return false
+
+		await prisma.channel.delete({ where: { id } })
+		return true
 	}
 
-	async function createChannel(userId, label) {
-		return generateChannel()
-			.then(channel => {
-				return db.run('INSERT INTO channels VALUES (?, ?, ?)', channel, userId, label)
-					.then(() => channel)
-			})
-	}
-
-	async function getChannelLabel(channel) {
-		return db.get('SELECT label FROM channels WHERE id = ?', channel)
-			.then(r => r && r.label)
-	}
-
-	async function setChannelLabel(userId, channel, label) {
-		return db.run('UPDATE channels SET label = ? WHERE id = ? AND user_id = ?', label, channel, userId)
-	}
-
-	async function destroyChannel(userId, channel) {
-		return db.run('DELETE FROM channels WHERE id = ? AND user_id = ?', channel, userId)
-	}
-
+	/*
 	async function getSubscriptionByChannel(channel) {
 		return getUserByChannel(channel)
 			.then(userId => db.get('SELECT subscription, enabled FROM subscriptions WHERE user_id = ?', userId))
@@ -66,25 +85,25 @@ export default async function createStore() {
 	async function getUserChannels(userId: string) {
 		return db.all('SELECT id, label FROM channels WHERE user_id = ?', userId)
 	}
-
-	async function generateChannel() {
-		return new Promise((resolve, reject) => {
-			crypto.randomBytes(12, (err, bytes) => {
-				if(err) reject(err)
-				else resolve(URLSafeBase64.encode(bytes))
-			})
-		})
-	}
+	*/
 
 	return {
-		saveSubscription,
-		disableSubscription,
-		createChannel,
-		destroyChannel,
-		getChannelLabel,
+		addSubscription,
+		removeSubscription,
+		addChannel,
 		setChannelLabel,
+		removeChannel,
+		/*
 		getUserChannels,
-		getSubscriptionByChannel
-	}*/
-	
+		getSubscriptionByChannel */
+	}
+}
+
+function generateChannel(): Promise<string> {
+	return new Promise((resolve, reject) => {
+		crypto.randomBytes(12, (err, bytes) => {
+			if(err) reject(err)
+			else resolve(URLSafeBase64.encode(bytes))
+		})
+	})
 }
