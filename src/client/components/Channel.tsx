@@ -14,17 +14,18 @@ export default function Channel({ id, label, onChanged }: Props): VNode {
 	const unsavedChanges = currentLabel !== label
 
 	async function saveLabel() {
-		await setChannelLabel(id, label)
+		await setChannelLabel(id, currentLabel)
 		onChanged()
 	}
 
 	return (
 		<div class="channel">
 			<div class="left-group">
-				<span class="id">{id}</span>
+				<span class="id" title="Channel ID">{id}</span>
 				<input
 					class="label"
-					placeholder="Label"
+					title="Channel label"
+					placeholder="Test Channel 1"
 					onInput={e => {
 						if(e.target instanceof HTMLInputElement) {
 							setCurrentLabel(e.target.value)
@@ -43,7 +44,7 @@ export default function Channel({ id, label, onChanged }: Props): VNode {
 					<button
 						class="save-btn"
 						onClick={saveLabel}
-					>Save</button>
+					>Save Label</button>
 				}
 				<button
 					class="del-btn"

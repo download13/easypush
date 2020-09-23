@@ -79,9 +79,11 @@ export async function destroyChannel(channel: string): Promise<boolean> {
 
 export async function enableNotifications(): Promise<boolean> {
 	const status = await Notification.requestPermission()
+	console.log({ status })
 	if(status !== 'granted') return false
 
 	const registration = await navigator.serviceWorker.getRegistration()
+	console.log({ registration })
 	if(!registration) {
 		console.error('Unable to enable notifications. No serviceworker registration')
 		return false
@@ -91,6 +93,7 @@ export async function enableNotifications(): Promise<boolean> {
 		userVisibleOnly: true,
 		applicationServerKey
 	})
+	console.log({ subscription })
 
 	const res = await authedFetch('/enable', {
 		method: 'POST',

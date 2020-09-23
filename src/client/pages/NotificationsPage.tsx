@@ -28,10 +28,13 @@ export function NotificationsPage(): VNode {
 				<a class="docs" href="/">Docs</a>
 				<button
 					class="toggle-notifications"
-					onClick={enabled
-						? disableNotifications
-						: enableNotifications
-					}
+					onClick={async () => {
+						const fn = enabled
+							? disableNotifications
+							: enableNotifications
+						await fn()
+						refresh()
+					}}
 				>
 					{enabled
 						? 'Disable Notifications'
@@ -63,10 +66,12 @@ export function NotificationsPage(): VNode {
 					class="create-channel"
 					title="Create Channel"
 					onClick={async () => {
-						const label = prompt('Label this channel?')
-						if(label !== null) {
+						const label = prompt('Label for channel')
+						if(label) {
 							await createChannel(label)
 							refresh()
+						} else {
+							alert('Cannot create channel without label')
 						}
 					}}
 				>+</button>
