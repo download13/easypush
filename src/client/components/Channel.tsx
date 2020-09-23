@@ -1,6 +1,6 @@
 import { h, VNode } from 'preact'
 import { useState } from 'preact/hooks'
-import { setChannelLabel, destroyChannel } from '../api'
+import { setChannelLabel, destroyChannel, testNotifyChannel } from '../api'
 
 type Props = {
 	id: string
@@ -56,6 +56,13 @@ export default function Channel({ id, label, onChanged }: Props): VNode {
 						}
 					}}
 				>Delete</button>
+				<button
+					title="Test channel"
+					onClick={async () => {
+						const text = prompt('Notification text', 'testing text') || 'testing text'
+						await testNotifyChannel(id, text)
+					}}
+				>Test</button>
 			</div>
 		</div>
 	)
