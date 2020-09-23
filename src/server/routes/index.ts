@@ -77,8 +77,10 @@ export default function addRoutes(app: Express, store: Store) {
 	app.get('/channel/list', keyRequired, async (req, res) => {
 		const key = (req as any)['authKey'] as string
 
+		const enabled = await store.isSubscriptionEnabled(key)
 		const channels = await store.getUserChannels(key)
-		res.send(channels)
+
+		res.send({ enabled, channels })
 	})
 
 	app.post('/notify/:channel', urlBody, async (req, res) => {

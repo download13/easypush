@@ -21,10 +21,7 @@ export async function getNotificationState(): Promise<NotificationResponse> {
 	const res = await authedFetch('/channel/list')
 
 	if(res.ok) {
-		return {
-			enabled: true,
-			channels: await res.json()
-		}
+		return (await res.json() as NotificationResponse)
 	} else if(res.status !== 401) {
 		console.error('createChannel error', res.status, await res.text())
 	}
@@ -140,10 +137,10 @@ function authedFetch(url: string, options: RequestInit = {}) {
 }
 
 
-export async function testNotifyChannel(channel: string): Promise<void> {
+export async function testNotifyChannel(channel: string, text: string): Promise<void> {
 	const res = await fetch('/notify/' + channel, {
 		method: 'POST',
-		body: 'title=testtitle&text=testtext',
+		body: 'title=Test+Title&text=' + encodeURIComponent(text),
 		headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 	})
 	console.log(await res.text())

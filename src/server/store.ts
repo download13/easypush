@@ -22,6 +22,14 @@ export default async function createStore() {
 		})
 	}
 
+	async function isSubscriptionEnabled(key: string): Promise<boolean> {
+		const handle = await prisma.browserHandle.findOne({
+			where: { id: key }
+		})
+
+		return Boolean(handle && handle.subscription)
+	}
+
 	async function removeSubscription(key: string) {
 		await prisma.browserHandle.update({
 			where: { id: key },
@@ -86,6 +94,7 @@ export default async function createStore() {
 
 	return {
 		addSubscription,
+		isSubscriptionEnabled,
 		removeSubscription,
 		addChannel,
 		setChannelLabel,
