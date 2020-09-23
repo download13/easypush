@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "esm": true,
-  "type":"module",
+  "type": "module",
   "private": true,
   "scripts": {
     "start": "cross-env NODE_ENV=development nodemon dist/server/index.js",
-    "watch:client": "webpack -w --mode=development",
+    "watch:client": "webpack --mode=development --config webpackfile.cjs --watch",
     "watch:server": "tsc -p src/server --watch",
-    "build": "webpack --mode=production && tsc -p src/server",
+    "build": "webpack --mode=production --config webpackfile.cjs && tsc -p src/server",
     "clean": "rm -rf dist/*",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -21,12 +21,7 @@
     "body-parser": "1.19.0",
     "dotenv": "^8.2.0",
     "express": "4.17.1",
-    "express-jwt": "6.0.0",
-    "jsonwebtoken": "8.5.1",
-    "sqlite": "4.0.14",
-    "sqlite3": "5.0.0",
     "urlsafe-base64": "^1.0.0",
-    "uuid": "8.3.0",
     "web-push": "3.4.4"
   },
   "devDependencies": {
@@ -36,8 +31,6 @@
     "@babel/preset-typescript": "^7.10.4",
     "@prisma/cli": "^2.7.1",
     "@types/express": "^4.17.8",
-    "@types/express-jwt": "0.0.42",
-    "@types/jsonwebtoken": "^8.5.0",
     "@types/uuid": "^8.3.0",
     "@types/web-push": "^3.3.0",
     "@typescript-eslint/eslint-plugin": "^4.2.0",
@@ -52,6 +45,7 @@
     "swkit": "^0.3.0",
     "ts-loader": "^8.0.4",
     "typescript": "^4.0.3",
+    "uuid": "8.3.0",
     "webpack": "^4.44.2",
     "webpack-cli": "^3.3.12"
   }
