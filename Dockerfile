@@ -12,4 +12,4 @@ FROM node:14.3.0 AS deploy
 WORKDIR /app
 COPY --from=build /app ./
 ENV NODE_ENV production
-CMD ["node", "dsit/server/index.js"]
+CMD ["node", "dist/server/index.js"]
