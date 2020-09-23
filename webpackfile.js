@@ -1,4 +1,5 @@
 const path = require('path')
+const Dotenv = require('dotenv-webpack')
 
 const clientSrc = path.resolve('./src/client')
 const clientDist = path.resolve('./dist/client')
@@ -39,6 +40,9 @@ module.exports = [
         babelRule
       ]
     },
+    plugins: [
+      new Dotenv()
+    ],
     resolve: {
       extensions: ['.js', '.ts', '.tsx'],
     }

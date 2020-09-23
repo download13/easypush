@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid'
 
-const vapidPublicKey = 'BAzsxRLgClQfk1yeiQFhMakVmbZ8LzQtwypN6HaEUB_ZPf0Z7UTZFkx-0zef8H_DYlyi-wgG_ewtKr9VBHNrISc'
+const vapidPublicKey = process.env.VAPID_PUBLIC_KEY || ''
 const applicationServerKey = urlBase64ToUint8Array(vapidPublicKey)
 
 type Channel = {

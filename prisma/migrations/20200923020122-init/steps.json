@@ -31,7 +31,7 @@
       "tag": "CreateField",
       "model": "BrowserHandle",
       "field": "id",
-      "type": "Int",
+      "type": "String",
       "arity": "Required"
     },
     {
@@ -68,7 +68,7 @@
         "directive": "default"
       },
       "argument": "",
-      "value": "autoincrement()"
+      "value": "uuid()"
     },
     {
       "tag": "CreateField",
@@ -110,6 +110,13 @@
       "value": "true"
     },
     {
+      "tag": "CreateField",
+      "model": "BrowserHandle",
+      "field": "channels",
+      "type": "Channel",
+      "arity": "List"
+    },
+    {
       "tag": "CreateModel",
       "model": "Channel"
     },
@@ -117,7 +124,7 @@
       "tag": "CreateField",
       "model": "Channel",
       "field": "id",
-      "type": "Int",
+      "type": "String",
       "arity": "Required"
     },
     {
@@ -154,13 +161,20 @@
         "directive": "default"
       },
       "argument": "",
-      "value": "autoincrement()"
+      "value": "cuid()"
+    },
+    {
+      "tag": "CreateField",
+      "model": "Channel",
+      "field": "label",
+      "type": "String",
+      "arity": "Required"
     },
     {
       "tag": "CreateField",
       "model": "Channel",
       "field": "handleId",
-      "type": "Int",
+      "type": "String",
       "arity": "Required"
     },
     {
@@ -208,13 +222,6 @@
       },
       "argument": "references",
       "value": "[id]"
-    },
-    {
-      "tag": "CreateField",
-      "model": "Channel",
-      "field": "label",
-      "type": "String",
-      "arity": "Required"
     }
   ]
 }
