@@ -1,7 +1,9 @@
+import type { PushSubscription } from 'web-push'
 import type { NextFunction, Request, Response } from 'express'
 
-export function isSubscription(obj: unknown): obj is PushSubscriptionJSON {
-	const s = obj as PushSubscriptionJSON
+export function isSubscription(obj: unknown): obj is PushSubscription {
+	const s = obj as PushSubscription
+
 	return (
 		obj &&
 		typeof obj === 'object' &&
@@ -15,7 +17,8 @@ export function isSubscription(obj: unknown): obj is PushSubscriptionJSON {
 export function keyRequired(req: Request, res: Response, next: NextFunction) {
 	const key = req.header('authorization')
 	if(key && typeof key === 'string' && key.length === 36) {
-		req['authKey'] = key
+		const r = req as any
+		r['authKey'] = key
 		next()
 	} else {
 		res.status(400).send('Invalid key')

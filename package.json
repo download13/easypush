@@ -2,8 +2,8 @@
   "name": "@download/easypush",
   "version": "1.0.0",
   "description": "",
-  "main": "src/server/index.js",
   "esm": true,
+  "type":"module",
   "private": true,
   "scripts": {
     "start": "cross-env NODE_ENV=development nodemon dist/server/index.js",

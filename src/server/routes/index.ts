@@ -2,7 +2,7 @@ import type { Store } from '../store.js'
 import type { Express } from 'express'
 import bodyParser from 'body-parser'
 import webpush from 'web-push'
-import { isSubscription, getKey, getChannelId, keyRequired } from './common.js'
+import { isSubscription, getChannelId, keyRequired } from './common.js'
 
 const jsonBody = bodyParser.json()
 const textBody = bodyParser.text()
@@ -10,7 +10,7 @@ const urlBody = bodyParser.urlencoded({extended: false})
 
 export default function addRoutes(app: Express, store: Store) {
 	app.post('/enable', jsonBody, keyRequired, async (req, res) => {
-		const key = req['authKey'] as string
+		const key = (req as any)['authKey'] as string
 
 		const subscription = req.body
 		if(!isSubscription(subscription)) {
@@ -23,14 +23,14 @@ export default function addRoutes(app: Express, store: Store) {
 	})
 
 	app.post('/disable', keyRequired, async (req, res) => {
-		const key = req['authKey'] as string
+		const key = (req as any)['authKey'] as string
 
 		await store.removeSubscription(key)
 		res.send('Disabled')
 	})
 
 	app.post('/channel/create', textBody, keyRequired, async (req, res) => {
-		const key = req['authKey'] as string
+		const key = (req as any)['authKey'] as string
 
 		const label = req.body
 		if(!label || typeof label !== 'string') {
@@ -43,7 +43,7 @@ export default function addRoutes(app: Express, store: Store) {
 	})
 
 	app.post('/channel/:channel/label', textBody, keyRequired, async (req, res) => {
-		const key = req['authKey'] as string
+		const key = (req as any)['authKey'] as string
 
 		const channelId = getChannelId(req.params.channel)
 		if(!channelId) {
@@ -62,39 +62,43 @@ export default function addRoutes(app: Express, store: Store) {
 	})
 
 	app.post('/channel/destroy', textBody, keyRequired, async (req, res) => {
-		const key = req['authKey'] as string
+		const key = (req as any)['authKey'] as string
 
+		const channelId = getChannelId(req.body)
+		if(!channelId) {
+			res.status(400).send('Invalid channel')
+			return
+		}
+
+		await store.removeChannel(key, channelId)
+		res.send('Destroyed')
+	})
+
+	app.get('/channel/list', keyRequired, async (req, res) => {
+		const key = (req as any)['authKey'] as string
+
+		const channels = await store.getUserChannels(key)
+		res.send(channels)
+	})
+
+	app.post('/notify/:channel', urlBody, async (req, res) => {
 		const channelId = getChannelId(req.params.channel)
 		if(!channelId) {
 			res.status(400).send('Invalid channel')
 			return
 		}
 
-		await store.removeChannel(key, id, req.body)
-		res.send('Destroyed')
-	})
-
-	app.get('/channel/list', async (req, res) => {
-		const channels = await store.getUserChannels(req.user.data)
-		res.send(channels)
-	})
-
-	app.post('/notify/:channel', urlBody, async (req, res) => {
-		const title = await store.getChannelLabel(req.body)
-
-		if(!title) {
-			res.status(404).send('Invalid channel')
+		const info = await store.getNotificationInfo(channelId)
+		if(!info) {
+			res.status(400).send('Invalid channel or subscriber not available')
 			return
 		}
 
-		const {text, icon} = req.body
-		const payload = JSON.stringify({title, text, icon})
+		const { title, subscription } = info
+		const { text, icon } = req.body
 
-		const subscription = await store.getSubscriptionByChannel(req.params.channel)
-		if(!subscription) {
-			res.status(404).send('Invalid channel')
-			return
-		}
+		const payload = JSON.stringify({ title, text, icon })
+		subscription.endpoint
 
 		try {
 			await webpush.sendNotification(subscription, payload)

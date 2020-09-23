@@ -1,6 +1,9 @@
-import { PrismaClient } from '@prisma/client'
+import type { PushSubscription } from 'web-push'
+import prismaStuff from '@prisma/client'
 import URLSafeBase64 from 'urlsafe-base64'
 import crypto from 'crypto'
+
+const { PrismaClient } = prismaStuff
 
 type ThenArg<T> = T extends PromiseLike<infer U> ? U : T
 
@@ -9,7 +12,7 @@ export type Store = ThenArg<ReturnType<typeof createStore>>
 export default async function createStore() {
 	const prisma = new PrismaClient()
 
-	async function addSubscription(key: string, subscription: PushSubscriptionJSON) {
+	async function addSubscription(key: string, subscription: PushSubscription) {
 		const subscriptionString = JSON.stringify(subscription)
 
 		await prisma.browserHandle.upsert({
@@ -39,53 +42,47 @@ export default async function createStore() {
 	}
 
 	async function setChannelLabel(subscriptionKey: string, id: string, label: string) {
-		const channel = await prisma.channel.findOne({
-			where: { id }
-		})
-
-		if(!channel || channel.handleId !== subscriptionKey) return false
-
-		await prisma.channel.update({
-			where: { id },
+		const changed = await prisma.channel.updateMany({
+			where: {
+				id,
+				handleId: subscriptionKey
+			},
 			data: { label }
 		})
-		return true
+
+		return changed.count > 0
 	}
 
 	async function removeChannel(subscriptionKey: string, id: string) {
-		const channel = await prisma.channel.findOne({
-			where: { id }
+		const removed = await prisma.channel.deleteMany({
+			where: {
+				id,
+				handleId: subscriptionKey
+			}
 		})
 
-		channel.handle()
-
-		if(!channel || channel.handleId !== subscriptionKey) return false
-
-		await prisma.channel.delete({ where: { id } })
-		return true
+		return removed.count > 0
 	}
 
-	/*
-	async function getSubscriptionByChannel(channel) {
-		return getUserByChannel(channel)
-			.then(userId => db.get('SELECT subscription, enabled FROM subscriptions WHERE user_id = ?', userId))
-			.then(r => {
-				if(r && r.enabled) {
-					return JSON.parse(r.subscription)
-				}
-				return null
-			})
+	async function getUserChannels(subscriptionKey: string) {
+		return await prisma.channel.findMany({
+			where: { handleId: subscriptionKey }
+		})
 	}
 
-	async function getUserByChannel(channel: string) {
-		return db.get('SELECT user_id FROM channels WHERE id = ?', channel)
-			.then(r => r.user_id)
-	}
+	async function getNotificationInfo(channelId: string) {
+		const channel = await prisma.channel.findOne({
+			where: { id: channelId },
+			include: { handle: true }
+		})
 
-	async function getUserChannels(userId: string) {
-		return db.all('SELECT id, label FROM channels WHERE user_id = ?', userId)
+		if(channel && channel.handle.subscription) {
+			return {
+				title: channel.label,
+				subscription: JSON.parse(channel.handle.subscription) as PushSubscription
+			}
+		}
 	}
-	*/
 
 	return {
 		addSubscription,
@@ -93,9 +90,8 @@ export default async function createStore() {
 		addChannel,
 		setChannelLabel,
 		removeChannel,
-		/*
 		getUserChannels,
-		getSubscriptionByChannel */
+		getNotificationInfo
 	}
 }
 
