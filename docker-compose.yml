@@ -8,7 +8,7 @@ services:
         aliases:
           - easypush
     volumes:
-      - /root/volumes/easypush:/app/store/data
+      - /root/volumes/easypush:/app/prisma/data
 
 networks:
   webserver:
