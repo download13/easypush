@@ -3,7 +3,7 @@ const path = require('path')
 const Dotenv = require('dotenv-webpack')
 
 const clientSrc = path.resolve('./client')
-const clientDist = path.resolve('../dist/client')
+const clientDist = path.resolve('./dist/client')
 
 const tsRule = {
 	test: /\.tsx?$/,

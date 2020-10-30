@@ -20,7 +20,7 @@ async function main() {
 
 	const store = await createStore()
 
-	app.use(express.static('src/server/static', { extensions: ['html'] }))
+	app.use(express.static('server/static', { extensions: ['html'] }))
 	app.use(express.static('dist/client'))
 
 	addRoutes(app, store)
