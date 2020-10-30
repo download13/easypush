@@ -9,6 +9,9 @@ services:
           - easypush
     volumes:
       - /root/volumes/easypush:/app/data
+    env_file: .env
+    environment:
+      NODE_ENV: production
 
 networks:
   webserver:

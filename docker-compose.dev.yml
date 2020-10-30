@@ -6,3 +6,6 @@ services:
     volumes:
       - .:/app
     entrypoint: nodemon dist/server/index.js
+    env_file: .env
+    environment:
+      NODE_ENV: development
