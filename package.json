@@ -6,12 +6,12 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "start": "cross-env NODE_ENV=development nodemon dist/server/index.js",
-    "watch:client": "webpack --mode=development --config webpackfile.cjs --watch",
-    "build": "prisma generate && webpack --mode=production --config webpackfile.cjs && tsc -p src/server",
-    "clean": "rm -rf dist/*",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "clean": "rm -rf dist/*"
   },
+  "workspaces": [
+    "client",
+    "server"
+  ],
   "author": "Erin Dachtler <download333@gmail.com>",
   "license": "ISC"
 }
