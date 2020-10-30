@@ -1,11 +1,26 @@
 version: "3.2"
 services:
-  serve:
+  run:
     image: node:14.3.0
     working_dir: /app
     volumes:
       - .:/app
-    entrypoint: nodemon dist/server/index.js
+    entrypoint: npx nodemon dist/server/index.js
     env_file: .env
     environment:
       NODE_ENV: development
+    depends_on:
+      - client
+      - server
+  client:
+    image: node:14.3.0
+    working_dir: /app
+    volumes:
+      - .:/app
+    entrypoint: npx webpack --mode=development --config client/webpackfile.cjs --watch
+  server:
+    image: node:14.3.0
+    working_dir: /app
+    volumes:
+      - .:/app
+    entrypoint: npx tsc -p server --watch

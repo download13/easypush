@@ -1,0 +1,42 @@
+{
+  "name": "@download/easypush-server",
+  "version": "1.0.0",
+  "description": "",
+  "esm": true,
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "serve": "cross-env NODE_ENV=development nodemon dist/server/index.js",
+    "watch:server": "tsc -p src/server --watch",
+    "build": "prisma generate --schema=./prisma/schema.prisma && webpack --mode=production --config webpackfile.cjs && tsc -p ."
+  },
+  "author": "Erin Dachtler <download333@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^2.7.1",
+    "@types/urlsafe-base64": "^1.0.28",
+    "body-parser": "1.19.0",
+    "dotenv": "^8.2.0",
+    "express": "4.17.1",
+    "urlsafe-base64": "^1.0.0",
+    "web-push": "3.4.4"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.11.6",
+    "@babel/plugin-transform-react-jsx": "^7.10.4",
+    "@babel/preset-env": "^7.11.5",
+    "@babel/preset-typescript": "^7.10.4",
+    "@prisma/cli": "^2.7.1",
+    "@types/express": "^4.17.8",
+    "@types/uuid": "^8.3.0",
+    "@types/web-push": "^3.3.0",
+    "@typescript-eslint/eslint-plugin": "^4.2.0",
+    "@typescript-eslint/parser": "^4.2.0",
+    "babel-loader": "^8.1.0",
+    "cross-env": "^7.0.2",
+    "dotenv-webpack": "^3.0.0",
+    "eslint": "^7.9.0",
+    "nodemon": "^2.0.4",
+    "preact": "10.4.8"
+  }
+}
