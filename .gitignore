@@ -1,6 +1,5 @@
 .env
 dist
-prisma/data
+data
 node_modules
-.vs
 .vscode
